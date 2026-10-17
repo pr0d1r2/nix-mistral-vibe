@@ -1,0 +1,47 @@
+---
+name: upstream
+
+# Polls mistralai/mistral-vibe for a new release and proves it builds here.
+# Detection only (V14): the job goes red when a newer release builds, and a
+# person or the loop makes the bump. No workflow here pushes or opens a PR.
+on:
+  schedule:
+    - cron: "40 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: upstream
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  bump:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342  # v31.11.0
+        with:
+          extra_nix_config: |
+            extra-substituters = https://pr0d1r2.cachix.org
+            extra-trusted-public-keys = pr0d1r2.cachix.org-1:NfWjbhgAj41byXhCKiaE+av3Vnphm1fTezHXEGsiQIM=
+      # `shell: bash` runs with pipefail, so a failed bump fails the step
+      # instead of reporting tee's exit status.
+      - name: Bump to the latest upstream release
+        id: bump
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: ./scripts/bump-mistral-vibe.sh | tee -a "$GITHUB_OUTPUT"
+      - name: Report a newer mistral-vibe
+        if: steps.bump.outputs.NEW_VERSION != ''
+        env:
+          V: ${{ steps.bump.outputs.NEW_VERSION }}
+        run: |
+          echo "::error::mistral-vibe $V is released and builds here."
+          echo "::error::Run scripts/bump-mistral-vibe.sh, then update README.md and SPEC.md."
+          exit 1
