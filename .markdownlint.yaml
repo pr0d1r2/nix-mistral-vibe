@@ -1,0 +1,7 @@
+---
+# SPEC.md is never hard-wrapped (mth-fmt), so line length is not a rule.
+MD013: false
+# Keep a Changelog repeats `### Added` / `### Changed` under every version;
+# a heading must be unique among its siblings only.
+MD024:
+  siblings_only: true

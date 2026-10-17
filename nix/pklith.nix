@@ -12,4 +12,5 @@ catalog: [
   catalog.shellcheck
   catalog.statix
   catalog.typos
+  catalog.yamllint
 ]

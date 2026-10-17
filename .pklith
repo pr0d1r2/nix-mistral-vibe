@@ -40,3 +40,5 @@ lock|-|-|written by `nix flake lock`; hygiene steps only
 ctrm|-|-|ctrm configuration; hygiene steps only
 ctrm-sets|-|-|ctrm configuration; hygiene steps only
 path:pkl/**|-|-|vendored hk schema and its provenance note (pkl/VENDORED.md); not ours to rewrite
+yaml|yamllint|-|-
+markdownlintignore|-|-|markdownlint configuration; hygiene steps only
