@@ -5,9 +5,9 @@ amends "pkl/Config.pkl"
 // (excludes, depends) by amending a step by its id.
 import "hk.pklith.pkl" as generated
 
-/// Vendored verbatim: hk's schema and its provenance note. An edit would
+/// Vendored verbatim: hk's schema, its provenance note, and microlith's FORMAT.md. An edit would
 /// silently fork them, so no fixer or linter touches them, as in pklith.
-local vendored = List("pkl/**")
+local vendored = List("pkl/**", "FORMAT.md")
 
 local fast = (generated.steps) {
   ["trailing-whitespace"] { exclude = vendored }

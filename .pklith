@@ -42,3 +42,4 @@ ctrm-sets|-|-|ctrm configuration; hygiene steps only
 path:pkl/**|-|-|vendored hk schema and its provenance note (pkl/VENDORED.md); not ours to rewrite
 yaml|yamllint|-|-
 markdownlintignore|-|-|markdownlint configuration; hygiene steps only
+path:FORMAT.md|-|-|vendored verbatim from microlith; not ours to restyle
