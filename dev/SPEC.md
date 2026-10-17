@@ -45,7 +45,6 @@ V19: ∀ tracked file type has `.pklith` row; `pklith check` & `pklith gen --che
 
 id|status|task|cites
 T14|.|repo secret `CACHIX_AUTH_TOKEN`; first `main` push → verify-cache green; tier2-eval via Rosetta unverified until then|V13,`.:V11`
-T18|.|spec federation: `FORMAT.md`, root + `dev` nodes, `.context-limits`; `mth-*`, `sherd-*`, `itok` steps|V19
 T20|.|report pklith issues upstream: v0.1.0 seeds schema hk 2.7.0 rejects; `lay` folds `pklith-check` into `gen-check` then fails on empty commit|-
 
 ## §B BUGS
