@@ -5,13 +5,25 @@ amends "pkl/Config.pkl"
 // (excludes, depends) by amending a step by its id.
 import "hk.pklith.pkl" as generated
 
-local all = (generated.steps) { ...generated.push }
+/// Vendored verbatim: hk's schema and its provenance note. An edit would
+/// silently fork them, so no fixer or linter touches them, as in pklith.
+local vendored = List("pkl/**")
+
+local fast = (generated.steps) {
+  ["trailing-whitespace"] { exclude = vendored }
+  ["final-newline"] { exclude = vendored }
+  ["line-endings"] { exclude = vendored }
+  ["ripsecrets"] { exclude = vendored }
+  ["markdownlint"] { exclude = vendored }
+}
+
+local all = (fast) { ...generated.push }
 
 hooks {
   ["pre-commit"] {
     fix = true
     stash = "git"
-    steps = generated.steps
+    steps = fast
   }
   ["pre-push"] {
     steps = all
