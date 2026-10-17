@@ -96,22 +96,5 @@
               "${pkgs.bash}/bin/bash ${./scripts/version-check.sh} ${pkgs.lib.getExe vibe} ${vibe.version} $out";
         }
       );
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          default = pkgs.mkShell {
-            packages = [
-              pkgs.nixfmt
-              pkgs.statix
-              pkgs.shellcheck
-              pkgs.actionlint
-            ];
-          };
-        }
-      );
     };
 }
