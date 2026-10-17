@@ -9,3 +9,18 @@ indent_style = space
 
 [{Makefile,*.mk,go.mod,*.go}]
 indent_style = tab
+
+# shfmt reads its indent from here: 2 spaces, case bodies unindented, as in
+# congestimancer. Without indent_size shfmt indents 8 spaces.
+[*.sh]
+indent_size = 2
+switch_case_indent = false
+
+# The extension-less hook shims and .envrc are shell too.
+[.githooks/*]
+indent_size = 2
+switch_case_indent = false
+
+[.envrc]
+indent_size = 2
+switch_case_indent = false
