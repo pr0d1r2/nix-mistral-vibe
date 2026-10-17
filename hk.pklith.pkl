@@ -98,6 +98,11 @@ steps: Mapping<String, Config.Step> = new {
     glob = List("**/*.md")
     check = "command -v git >/dev/null 2>&1 || { echo 'links: git is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; command -v lychee >/dev/null 2>&1 || { echo 'links: lychee is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; git ls-files -z '*.md' | xargs -0 lychee --offline --no-progress --include-fragments || { echo 'links: a relative link or anchor is broken' >&2; exit 1; }"
   }
+  ["mth-fmt"] {
+    glob = List("**/SPEC.md")
+    check = #"command -v mth >/dev/null 2>&1 || { echo 'mth-fmt: mth is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; (for f in {{files}}; do mth fmt --check "$f" || exit 1; done) || { echo 'mth-fmt: SPEC.md is hard-wrapped or over the line cap' >&2; exit 1; }"#
+    fix = #"(for f in {{files}}; do mth fmt "$f" || exit 1; done)"#
+  }
   ["gen-check"] {
     glob = List(".pklith", "hk.pklith.pkl", "nix/pklith.nix")
     check = "command -v pklith >/dev/null 2>&1 || { echo 'gen-check: pklith is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; pklith gen --check || { echo 'gen-check: hk.pklith.pkl or nix/pklith.nix no longer matches .pklith; run pklith gen' >&2; exit 1; }"

@@ -7,6 +7,7 @@ catalog: [
   catalog.gnugrep
   catalog.lychee
   catalog.markdownlint-cli
+  catalog.microlith
   catalog.nixfmt
   catalog.ripsecrets
   catalog.shellcheck
