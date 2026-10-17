@@ -47,3 +47,4 @@ context-limits|itok, sherd-budget|-|-
 path:**/SPEC.md|markdownlint, links, mth-fmt, mth-check, sherd-check, sherd-nav, sherd-budget, itok|-|-
 sh|shellcheck, shfmt|-|-
 LICENSE|-|-|license text, nothing to lint
+path:.github/workflows/*.yml|actionlint, zizmor, yamllint|-|-
