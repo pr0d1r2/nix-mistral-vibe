@@ -1,0 +1,24 @@
+# Allowed characters per file. Last match wins. Same sets as actlith.
+
+# The floor: plain ASCII everywhere.
+* ascii
+
+# Markdown that documents notation may hold it.
+*.md ascii+spec
+
+# Prose a reader meets first stays plain.
+README.md ascii
+
+# Specs and the vendored spec format are written in caveman notation.
+SPEC.md ascii+spec
+**/SPEC.md ascii+spec
+FORMAT.md ascii+spec
+
+# Token ceilings cite spec sections by the section sign.
+.context-limits ascii+caveman
+
+# pklith-generated steps may cite spec sections.
+hk.pklith.pkl ascii+caveman
+
+# Vendored hk schema, not ours to rewrite.
+pkl/Config.pkl any

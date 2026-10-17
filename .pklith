@@ -3,17 +3,39 @@ format 1
 # Seeded by `pklith seed --init` from the fragments this repository's
 # files switch on (`pklith detect`). It is yours now: pklith never rewrites it.
 #
-# No built-in check reads these types yet, so `pklith check` names them
-# until each gets checks or an exempt reason: envrc, gitignore, lock.
+# Rows follow actlith's .pklith: same overrides, same fleet tools. A type is
+# listed only once a tracked file has it; a row that matches nothing is stale.
+
+## checks
+id|category|nix|glob|check|fix|env|msg
+# Overrides the catalog row: its globs miss the extension-less hook shims
+# pklith seeds into .githooks/ (pklith overrides it the same way).
+shellcheck|lint|shellcheck|.githooks/*, .envrc, **/*.sh|shellcheck --shell=bash {{files}}|-|-|shell script finding
+# Not in pklith's catalog; ctrm comes from the dev flake, as in actlith.
+ctrm|lint|-|**/*|ctrm check {{files}}|ctrm fix {{files}}|-|a file holds a character its set does not grant; fix it, or grant it in .ctrm and say why in the commit
+# xenolith: one language per file, as in actlith.
+xnl-check|lint|-|**/*.nix, **/*.pkl, .envrc, .githooks/*|xnl check {{files}}|-|-|a host file embeds a non-trivial program in another language; extract it with xnl extract
+xnl-lint|lint|-|**/*.nix, **/*.pkl, .envrc, .githooks/*|xnl lint {{files}}|xnl lint --fix {{files}}|-|an embedded or extracted program fails its own language's linter
+# The registry judges itself: generated steps match .pklith, and every
+# tracked file type has a row.
+gen-check|gate|-|.pklith, hk.pklith.pkl, nix/pklith.nix|pklith gen --check|pklith gen|-|hk.pklith.pkl or nix/pklith.nix no longer matches .pklith; run pklith gen
+pklith-check|gate|-|-|pklith check|-|-|a tracked file type has no row in .pklith, a row matches nothing, or a claimed check never reaches its files
+# Relative links and anchors in Markdown resolve, offline.
+links|lint|lychee|**/*.md|git ls-files -z '*.md' \| xargs -0 lychee --offline --no-progress --include-fragments|-|-|a relative link or anchor is broken
 
 ## types
 type|checks|min|exempt
-*|trailing-whitespace, final-newline, line-endings, no-bom, no-merge-conflict, no-case-conflict, no-broken-symlinks, no-private-key, ripsecrets, typos, editorconfig-checker, no-local-paths|-|-
+*|trailing-whitespace, final-newline, line-endings, no-bom, no-merge-conflict, no-case-conflict, no-broken-symlinks, no-private-key, ripsecrets, typos, editorconfig-checker, no-local-paths, ctrm|-|-
 editorconfig|-|-|written by pklith (seed or gen)
 gitattributes|-|-|written by pklith (seed or gen)
-md|markdownlint|-|-
-nix|nixfmt, statix, deadnix|-|-
-pklith|-|-|written by pklith (seed or gen)
-pkl|-|-|written by pklith (seed or gen)
-pre-commit|-|-|written by pklith (seed or gen)
-pre-push|-|-|written by pklith (seed or gen)
+md|markdownlint, links|-|-
+nix|nixfmt, statix, deadnix, xnl-check, xnl-lint|-|-
+pklith|pklith-check, gen-check|-|-
+pkl|xnl-check, xnl-lint|-|-
+pre-commit|shellcheck, xnl-check, xnl-lint|-|-
+pre-push|shellcheck, xnl-check, xnl-lint|-|-
+envrc|shellcheck, xnl-check, xnl-lint|-|-
+gitignore|-|-|git configuration; hygiene steps only
+lock|-|-|written by `nix flake lock`; hygiene steps only
+ctrm|-|-|ctrm configuration; hygiene steps only
+ctrm-sets|-|-|ctrm configuration; hygiene steps only
