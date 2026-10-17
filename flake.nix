@@ -40,29 +40,62 @@
         "aarch64-linux"
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems f;
-    in
-    {
-      packages = forAllSystems (
+      # Upstream leaves meta.mainProgram unset, so `lib.getExe` warns. meta is
+      # not part of the derivation: the store path, and the cache hit, are
+      # upstream's own.
+      # A plain attribute merge: overrideAttrs (and lib.addMetaAttrs, which
+      # calls it) re-instantiates the derivation and changes its path.
+      vibeFor =
         system:
         let
-          upstream = mistral-vibe.packages.${system};
+          pkg = mistral-vibe.packages.${system}.default;
         in
-        {
-          mistral-vibe = upstream.default;
-          inherit (upstream) rustCli;
-          inherit (upstream) default;
+        pkg
+        // {
+          meta = pkg.meta // {
+            mainProgram = "vibe";
+          };
+        };
+      app = pkg: bin: {
+        type = "app";
+        program = "${pkg}/bin/${bin}";
+      };
+    in
+    {
+      packages = forAllSystems (system: {
+        mistral-vibe = vibeFor system;
+        default = vibeFor system;
+        inherit (mistral-vibe.packages.${system}) rustCli;
+      });
+
+      # The package ships three programs; upstream exposes only `vibe`.
+      apps = forAllSystems (
+        system:
+        mistral-vibe.apps.${system}
+        // {
+          vibe-acp = app (vibeFor system) "vibe-acp";
+          vibe-app-server = app (vibeFor system) "vibe-app-server";
         }
       );
 
-      apps = forAllSystems (system: mistral-vibe.apps.${system});
-
       overlays.default = final: _prev: {
-        mistral-vibe = mistral-vibe.packages.${final.stdenv.hostPlatform.system}.default;
+        mistral-vibe = vibeFor final.stdenv.hostPlatform.system;
       };
 
-      checks = forAllSystems (system: {
-        inherit (mistral-vibe.packages.${system}) default rustCli;
-      });
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          vibe = vibeFor system;
+        in
+        {
+          inherit (mistral-vibe.packages.${system}) default rustCli;
+          # V1: the binary reports the version the input tag names.
+          version =
+            pkgs.runCommand "mistral-vibe-version-check" { }
+              "${pkgs.bash}/bin/bash ${./scripts/version-check.sh} ${pkgs.lib.getExe vibe} ${vibe.version} $out";
+        }
+      );
 
       devShells = forAllSystems (
         system:

@@ -45,3 +45,4 @@ markdownlintignore|-|-|markdownlint configuration; hygiene steps only
 path:FORMAT.md|-|-|vendored verbatim from microlith; not ours to restyle
 context-limits|itok, sherd-budget|-|-
 path:**/SPEC.md|markdownlint, links, mth-fmt, mth-check, sherd-check, sherd-nav, sherd-budget, itok|-|-
+sh|shellcheck, shfmt|-|-
