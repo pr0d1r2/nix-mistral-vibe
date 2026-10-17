@@ -70,8 +70,7 @@ V15: ⊥ IFD in this repo's own code, ⊥ `--impure`. upstream IFD tolerated whi
 
 id|status|task|cites
 T5|.|eval & build linux tier-1 on native runners (CI) or linux builder|V2,V11
-T13|.|README: why, use, consumer follows, cache + `trusted-users`, platform tiers, pin graph|V12
-T21|.|upstream issue? pass `pname`/`version` to crane → ⊥ IFD on `rustCliSrc`; ! user OK (external org)|V11,V15
+T21|.|upstream: pass `pname`/`version` to crane → ⊥ IFD on `rustCliSrc`; `--remap-path-prefix` for Harness → ⊥ 530 MiB crate sources in runtime closure; ! user OK (external org)|V11,V15
 
 ## §B BUGS
 
