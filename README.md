@@ -1,5 +1,11 @@
 # nix-mistral-vibe
 
+<!-- hallucinogen:autonomy-disclaimer start -->
+> Read [LLM-DISCLAIMER](docs/LLM-DISCLAIMER.md) first. This repository is
+> tended by an autonomous loop, and that file says what the loop may do here,
+> what it may not, and what to check before trusting anything in this tree.
+<!-- hallucinogen:autonomy-disclaimer end -->
+
 [Mistral Vibe](https://github.com/mistralai/mistral-vibe) 2.26.1 as a Nix
 flake, built against the nixpkgs the rest of the pr0d1r2 fleet pins
 (`nixos-26.05`), and served prebuilt from cachix.
