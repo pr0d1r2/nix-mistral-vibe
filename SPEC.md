@@ -29,11 +29,12 @@ self|.|-
 - `cryptography 50.0.0` ⊥ wheel for `x86_64-darwin` → source build w/ `fetchCargoVendor` hash upstream says "matches nixpkgs a7e1a760ab81". Risk on our pin; tier-2 only.
 - upstream outputs: `packages.<sys>.{default,rustCli}`, `apps.<sys>.{default,rustCli}`, `devShells.<sys>.default`. `rustCli` = shell wrapper setting `VIBE_CLI=rust`.
 - python = `python312` (upstream hardcodes).
-- pin graph: `nixpkgs-lock` (tracks `nixos-26.05`, sole fleet nixpkgs authority) → this repo → consumers; consumers also consume `nixpkgs-lock` directly.
 - `mistral-vibe.inputs.nixpkgs.follows = "nixpkgs"` → upstream builds on our pin. Upstream's `pyproject-nix`, `uv2nix`, `pyproject-build-systems` follow upstream root nixpkgs ∴ one edge redirects ∀. `crane` ⊥ nixpkgs input.
 - ⊥ 2nd nixpkgs. Unfollowed upstream nixpkgs → parallel unstable python/stdenv/rustc closure & forked rev → silent cache miss ∀ consumer.
 - upstream tests only against unstable ∴ 26.05 compat = measured, ⊥ assumed. Break → `overrideAttrs` on exported pkg before vendoring recipe. Vendoring = last resort (~200 lines drift).
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
+- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 2.26.1`. `x86_64-darwin` evals from aarch64-darwin.
+- upstream IFD: `rustCliSrc` = `runCommand` drv; crane reads its `Cargo.toml` @ eval → eval of `packages.<sys>` ! builder for `<sys>`. aarch64-darwin eval of linux → `Cannot build '...-vibe-rs-src.drv'`. ∴ ⊥ cross-system eval from 1 runner; each tier-1 runner evals own system.
 - `nixConfig` substituter inert for untrusted users (warn `ignoring untrusted substituter`) → README ! say `trusted-users`.
 
 ## §I INTERFACES
@@ -61,18 +62,18 @@ V7: `flake.lock` ∃ exactly 1 nixpkgs node. 2nd → fail (unfollowed edge)
 V8: nixpkgs rev ≡ nixpkgs-lock published rev
 V9: upstream pinned by release tag. ⊥ branch ref
 V10: ⊥ own build recipe while upstream builds on pin. Fix via `overrideAttrs` on re-export first
-V11: declared systems ≡ 4. Eval ! pass ∀ 4. `x86_64-darwin` build ⊥ gate `main`
+V11: declared systems ≡ 4. Eval ! pass ∀ 4 on a builder for that system (upstream IFD, §C). `x86_64-darwin` build ⊥ gate `main`
 V12: README states `x86_64-darwin` = local build, uncached
-V15: ⊥ IFD, ⊥ `--impure`
+V15: ⊥ IFD in this repo's own code, ⊥ `--impure`. upstream IFD tolerated while re-exporting (V10)
 
 ## §T TASKS
 
 id|status|task|cites
-T3|~|local build aarch64-darwin `.#mistral-vibe` & `.#rustCli` on 26.05 pin; record result ∈ §C|V2,V10
-T4|.|`vibe --version` reports `2.26.1`|V1
-T5|.|eval ∀ 4 systems incl `x86_64-darwin`|V11
+T5|.|eval & build linux tier-1 on native runners (CI) or linux builder|V2,V11
 T13|.|README: why, use, consumer follows, cache + `trusted-users`, platform tiers, pin graph|V12
+T21|.|upstream issue? pass `pname`/`version` to crane → ⊥ IFD on `rustCliSrc`; ! user OK (external org)|V11,V15
 
 ## §B BUGS
 
 id|date|cause|fix
+B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane reads `Cargo.toml` from `rustCliSrc` drv @ eval → linux eval from darwin fails|V11
