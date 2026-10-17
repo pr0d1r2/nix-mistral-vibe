@@ -44,7 +44,7 @@ V19: ∀ tracked file type has `.pklith` row; `pklith check` & `pklith gen --che
 ## §T TASKS
 
 id|status|task|cites
-T20|.|report pklith issues upstream: v0.1.0 seeds schema hk 2.7.0 rejects; `lay` folds `pklith-check` into `gen-check` then fails on empty commit|-
+T22|.|on pklith release > v0.1.0: bump `dev/flake.nix` pklith tag, drop hand-vendored `pkl/Config.pkl` if seed matches (B1). lay bugs reported as comments on pklith #29 (B2), #42 (tools ⊥ PATH); inline guards on #16|V16,V17
 
 ## §B BUGS
 
