@@ -69,8 +69,7 @@ V15: ⊥ IFD in this repo's own code, ⊥ `--impure`. upstream IFD tolerated whi
 ## §T TASKS
 
 id|status|task|cites
-T5|.|eval & build linux tier-1 on native runners (CI) or linux builder|V2,V11
-T21|.|upstream: pass `pname`/`version` to crane → ⊥ IFD on `rustCliSrc`; `--remap-path-prefix` for Harness → ⊥ 530 MiB crate sources in runtime closure; ! user OK (external org)|V11,V15
+T21|~|upstream fixes filed, tested on v2.26.1: mistralai/mistral-vibe#1282 (path `src` → ⊥ IFD), #1283 (`--remap-path-prefix` → ⊥ 530 MiB vendor tree). on merge + release: drop per-runner eval (B4), re-measure closure|V11,V15
 
 ## §B BUGS
 
