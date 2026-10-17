@@ -107,6 +107,10 @@ steps: Mapping<String, Config.Step> = new {
     glob = List("**/SPEC.md")
     check = #"command -v mth >/dev/null 2>&1 || { echo 'mth-check: mth is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; (for f in {{files}}; do mth check "$f" || exit 1; done) || { echo 'mth-check: SPEC.md breaks a structural rule' >&2; exit 1; }"#
   }
+  ["sherd-check"] {
+    glob = List("**/SPEC.md", "**/*.rs")
+    check = "command -v sherd >/dev/null 2>&1 || { echo 'sherd-check: sherd is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; sherd check || { echo 'sherd-check: a citation across spec nodes does not resolve' >&2; exit 1; }"
+  }
   ["gen-check"] {
     glob = List(".pklith", "hk.pklith.pkl", "nix/pklith.nix")
     check = "command -v pklith >/dev/null 2>&1 || { echo 'gen-check: pklith is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; pklith gen --check || { echo 'gen-check: hk.pklith.pkl or nix/pklith.nix no longer matches .pklith; run pklith gen' >&2; exit 1; }"
