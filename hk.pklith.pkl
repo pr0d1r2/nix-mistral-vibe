@@ -85,6 +85,11 @@ steps: Mapping<String, Config.Step> = new {
     glob = List("**/*.nix", "**/*.pkl", ".envrc", ".githooks/*")
     check = "command -v xnl >/dev/null 2>&1 || { echo 'xnl-check: xnl is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; xnl check {{files}} || { echo 'xnl-check: a host file embeds a non-trivial program in another language; extract it with xnl extract' >&2; exit 1; }"
   }
+  ["xnl-lint"] {
+    glob = List("**/*.nix", "**/*.pkl", ".envrc", ".githooks/*")
+    check = #"command -v xnl >/dev/null 2>&1 || { echo 'xnl-lint: xnl is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; xnl lint {{files}} || { echo 'xnl-lint: an embedded or extracted program fails its own language'\''s linter' >&2; exit 1; }"#
+    fix = "xnl lint --fix {{files}}"
+  }
 }
 
 push: Mapping<String, Config.Step> = new {
