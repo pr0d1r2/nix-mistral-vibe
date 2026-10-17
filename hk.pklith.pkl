@@ -81,6 +81,10 @@ steps: Mapping<String, Config.Step> = new {
     check = "command -v ctrm >/dev/null 2>&1 || { echo 'ctrm: ctrm is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; ctrm check {{files}} || { echo 'ctrm: a file holds a character its set does not grant; fix it, or grant it in .ctrm and say why in the commit' >&2; exit 1; }"
     fix = "ctrm fix {{files}}"
   }
+  ["xnl-check"] {
+    glob = List("**/*.nix", "**/*.pkl", ".envrc", ".githooks/*")
+    check = "command -v xnl >/dev/null 2>&1 || { echo 'xnl-check: xnl is not on PATH; re-enter the dev shell. A MISSING TOOL, not a finding.' >&2; exit 1; }; xnl check {{files}} || { echo 'xnl-check: a host file embeds a non-trivial program in another language; extract it with xnl extract' >&2; exit 1; }"
+  }
 }
 
 push: Mapping<String, Config.Step> = new {
