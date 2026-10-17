@@ -23,51 +23,65 @@
     # Hook guardrails materialised from the repository's files.
     pklith = {
       url = "github:pr0d1r2/pklith/v0.1.0";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+      };
     };
     # Hardened, SHA-pinned GitHub Actions workflows from `.actlith`.
     actlith = {
       url = "github:pr0d1r2/actlith/v0.1.0";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
-      inputs.microlith.follows = "microlith";
-      inputs.itok.follows = "itok";
-      inputs.sherd.follows = "sherd";
-      inputs.characterminator.follows = "characterminator";
-      inputs.pklith.follows = "pklith";
-      inputs.rekall.follows = "rekall";
-      inputs.xenolith.follows = "xenolith";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+        microlith.follows = "microlith";
+        itok.follows = "itok";
+        sherd.follows = "sherd";
+        characterminator.follows = "characterminator";
+        pklith.follows = "pklith";
+        rekall.follows = "rekall";
+        xenolith.follows = "xenolith";
+      };
     };
     # Spec form and spec operations (`mth`).
     microlith = {
       url = "github:pr0d1r2/microlith/v0.7.4";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+      };
     };
     # Context limits (`itok check`).
     itok = {
       url = "github:pr0d1r2/itok/v0.3.1";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        hk.follows = "nix-hk";
+      };
     };
     # SPEC-DAG federation, budgets, waves.
     sherd = {
       url = "github:pr0d1r2/sherd/v0.5.4";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+      };
     };
     # Allowed characters per file type (`ctrm`).
     characterminator = {
       url = "github:pr0d1r2/characterminator/v0.1.1";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+      };
     };
     # Rules extracted from agent memory, and the honesty gate on them.
     rekall = {
       url = "github:pr0d1r2/rekall/v0.4.0";
-      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
-      inputs.nix-hk.follows = "nix-hk";
+      inputs = {
+        nixpkgs-lock.follows = "nixpkgs-lock";
+        nix-hk.follows = "nix-hk";
+      };
     };
     # One language per file, 1:1 test mirror, TDD order (`xnl`).
     xenolith = {
