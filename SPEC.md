@@ -35,6 +35,7 @@ self|.|-
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
 - MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 2.26.1`. `x86_64-darwin` evals from aarch64-darwin.
 - upstream IFD: `rustCliSrc` = `runCommand` drv; crane reads its `Cargo.toml` @ eval → eval of `packages.<sys>` ! builder for `<sys>`. aarch64-darwin eval of linux → `Cannot build '...-vibe-rs-src.drv'`. ∴ ⊥ cross-system eval from 1 runner; each tier-1 runner evals own system.
+- upstream fixes filed (T21): mistralai/mistral-vibe#1282 (path `src` → ⊥ IFD), #1283 (`--remap-path-prefix` → ⊥ 530 MiB vendor tree), tested on `v2.26.1`. Until merged + released and the pin bumped: keep per-runner eval (B4), V15 tolerates upstream IFD. After: drop per-runner eval, re-measure closure.
 - `nixConfig` substituter inert for untrusted users (warn `ignoring untrusted substituter`) → README ! say `trusted-users`.
 
 ## §I INTERFACES
@@ -69,7 +70,7 @@ V15: ⊥ IFD in this repo's own code, ⊥ `--impure`. upstream IFD tolerated whi
 ## §T TASKS
 
 id|status|task|cites
-T21|~|upstream fixes filed, tested on v2.26.1: mistralai/mistral-vibe#1282 (path `src` → ⊥ IFD), #1283 (`--remap-path-prefix` → ⊥ 530 MiB vendor tree). on merge + release: drop per-runner eval (B4), re-measure closure|V11,V15
+T21|x|upstream fixes filed, tested on v2.26.1: mistralai/mistral-vibe#1282 (path `src` → ⊥ IFD), #1283 (`--remap-path-prefix` → ⊥ 530 MiB vendor tree). on merge + release: drop per-runner eval (B4), re-measure closure|V11,V15
 
 ## §B BUGS
 
