@@ -5,7 +5,8 @@
 # mistralai/mistral-vibe#1282; drop this file and re-export again once a
 # release carries it (T23).
 #
-# Everything else is upstream's, in upstream's order. A tag bump re-syncs
+# Everything else is upstream's, in upstream's order; its hook shell is
+# in nix/vibe/, one file per step (xenolith). A tag bump re-syncs
 # this file against upstream's flake.nix (scripts/bump-mistral-vibe.sh says
 # so). The inputs are upstream's own locked ones, so the lock graph is the
 # same as when this flake only re-exported (V6, V7).
@@ -99,16 +100,11 @@ let
             };
             # The Rust CLI is built by crane below and lands in the wheel
             # through its vibe/_bin include.
-            prePatch = (old.prePatch or "") + ''
-              mkdir -p vibe/_bin
-              cp ${vibeRs}/bin/vibe-rs vibe/_bin/vibe-rs
-            '';
+            prePatch = (old.prePatch or "") + "\nbash ${./vibe/pre-patch.sh} ${vibeRs}/bin/vibe-rs\n";
             # The backend detects an sdist by a PKG-INFO at the project root.
             postPatch = (old.postPatch or "") + "\ntouch PKG-INFO";
-            preBuild = (old.preBuild or "") + ''
-              mkdir -p .cargo
-              cat ${harnessVendor}/config.toml >> .cargo/config.toml
-            '';
+            # Shell steps live in nix/vibe/, one file each (xenolith).
+            preBuild = (old.preBuild or "") + "\nbash ${./vibe/pre-build.sh} ${harnessVendor}/config.toml\n";
             nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
               pkgs.cargo
               pkgs.rustc
@@ -125,18 +121,11 @@ let
 
   # The one change from upstream (#1282): a plain path as `src`. crane reads
   # Cargo.toml and walks the tree while evaluating; reading a derivation's
-  # output there is import-from-derivation. banners.rs include_str!s
-  # whats_new.md from above the crate; the dependency-only build sees
-  # crane's dummy sources, hence the guard.
+  # output there is import-from-derivation. The whats_new.md fixup moves to
+  # postPatch (nix/vibe/vibe-rs-post-patch.sh).
   vibeRs = craneLib.buildPackage {
     src = "${src}/vibe/cli-rust";
-    postPatch = ''
-      if grep -qF '../../../whats_new.md' src/startup/banners.rs 2>/dev/null; then
-        cp ${src}/vibe/whats_new.md whats_new.md
-        substituteInPlace src/startup/banners.rs \
-          --replace-fail '../../../whats_new.md' '../../whats_new.md'
-      fi
-    '';
+    postPatch = "bash ${./vibe/vibe-rs-post-patch.sh} ${src}/vibe/whats_new.md";
     cargoVendorDir = craneLib.vendorCargoDeps {
       cargoLock = "${src}/vibe/cli-rust/Cargo.lock";
     };
@@ -174,9 +163,7 @@ let
 in
 {
   inherit default;
-  # The full application with the Rust TUI forced via VIBE_CLI.
-  rustCli = pkgs.writeShellScriptBin "vibe" ''
-    export VIBE_CLI=rust
-    exec "${default}/bin/vibe" "$@"
-  '';
+  # The full application with the Rust TUI forced via VIBE_CLI; one command,
+  # so it stays inline (xenolith).
+  rustCli = pkgs.writeShellScriptBin "vibe" ''exec env VIBE_CLI=rust "${default}/bin/vibe" "$@"'';
 }
