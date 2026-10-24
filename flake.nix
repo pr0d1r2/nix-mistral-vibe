@@ -40,15 +40,27 @@
         "aarch64-linux"
       ];
       forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems f;
+      # Upstream's recipe, vendored with the IFD fix (nix/vibe.nix, V10).
+      recipe =
+        system:
+        import ./nix/vibe.nix {
+          pkgs = nixpkgs.legacyPackages.${system};
+          src = mistral-vibe;
+          inherit (mistral-vibe.inputs)
+            uv2nix
+            pyproject-nix
+            pyproject-build-systems
+            crane
+            ;
+        };
       # Upstream leaves meta.mainProgram unset, so `lib.getExe` warns. meta is
-      # not part of the derivation: the store path, and the cache hit, are
-      # upstream's own.
+      # not part of the derivation, so the store path stays the recipe's own.
       # A plain attribute merge: overrideAttrs (and lib.addMetaAttrs, which
       # calls it) re-instantiates the derivation and changes its path.
       vibeFor =
         system:
         let
-          pkg = mistral-vibe.packages.${system}.default;
+          pkg = (recipe system).default;
         in
         pkg
         // {
@@ -65,18 +77,16 @@
       packages = forAllSystems (system: {
         mistral-vibe = vibeFor system;
         default = vibeFor system;
-        inherit (mistral-vibe.packages.${system}) rustCli;
+        inherit (recipe system) rustCli;
       });
 
       # The package ships three programs; upstream exposes only `vibe`.
-      apps = forAllSystems (
-        system:
-        mistral-vibe.apps.${system}
-        // {
-          vibe-acp = app (vibeFor system) "vibe-acp";
-          vibe-app-server = app (vibeFor system) "vibe-app-server";
-        }
-      );
+      apps = forAllSystems (system: {
+        default = app (vibeFor system) "vibe";
+        rustCli = app (recipe system).rustCli "vibe";
+        vibe-acp = app (vibeFor system) "vibe-acp";
+        vibe-app-server = app (vibeFor system) "vibe-app-server";
+      });
 
       overlays.default = final: _prev: {
         mistral-vibe = vibeFor final.stdenv.hostPlatform.system;
@@ -89,7 +99,8 @@
           vibe = vibeFor system;
         in
         {
-          inherit (mistral-vibe.packages.${system}) default rustCli;
+          default = vibe;
+          inherit (recipe system) rustCli;
           # V1: the binary reports the version the input tag names.
           version =
             pkgs.runCommand "mistral-vibe-version-check" { }
