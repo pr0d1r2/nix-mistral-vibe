@@ -18,14 +18,14 @@ self|dev|repo gate: dev flake, guardrail tools, hk steps, CI workflows, cachix p
 - native runners: `ubuntu-24.04`, `ubuntu-24.04-arm`, `macos-14`. ⊥ qemu, ⊥ cross.
 - `cachix-action` pushes ∈ POST step, logs 403 w/o failing job ∴ separate `verify-cache` job.
 - ⊥ workflow pushes branch or opens PR. bumps by hand or loop.
-- CI hand-written, ⊥ actlith v0.1.0: its `build` kind evals ∀ systems on 1 runner (upstream IFD breaks it, root B4) & has ⊥ `assert-pins`. actions SHA-pinned as actlith.
+- CI hand-written, ⊥ actlith v0.1.0: its `build` kind has ⊥ `assert-pins`. 1-host eval works since `.:V21`. actions SHA-pinned as actlith.
 
 ## §I INTERFACES
 
 - cmd: `nix develop ./dev` | `direnv allow` → shell w/ hk, pklith & fleet tools
 - cmd: `hk check --all` → exit 0; `pklith confirm` → exit 0
 - env: `CACHIX_AUTH_TOKEN` repo secret, per-cache token w/ WRITE on `pr0d1r2`
-- ci: `.github/workflows/build.yml` (build, verify-cache, tier2-eval, assert-pins, gate)
+- ci: `.github/workflows/build.yml` (build, verify-cache, eval, assert-pins, gate)
 - ci: `.github/workflows/upstream.yml` (daily, detection only)
 - script: `scripts/bump-mistral-vibe.sh` → bump tag in `flake.nix`, relock, build; prints `NEW_VERSION=` when moved
 - script: `scripts/verify-cache.sh <sys> <pkg>...`, `scripts/assert-pins.sh`
