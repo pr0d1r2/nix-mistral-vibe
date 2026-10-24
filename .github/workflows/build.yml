@@ -17,8 +17,7 @@ permissions:
 jobs:
   # Tier-1: built, checked and cached, one native runner per system. No qemu
   # and no cross: a cross-built path is a different store path and never the
-  # one consumers substitute. Each runner also evaluates only its own system:
-  # upstream's flake reads a derivation's output while evaluating (SPEC B4).
+  # one consumers substitute.
   build:
     strategy:
       fail-fast: false
@@ -87,11 +86,12 @@ jobs:
       - name: Every package is in the cache
         run: ./scripts/verify-cache.sh "$SYSTEM" mistral-vibe rustCli
 
-  # Tier-2: x86_64-darwin must evaluate (V11) but is never built or pushed.
-  # Evaluation needs an x86_64-darwin builder, which an Apple silicon runner
-  # provides through Rosetta 2.
-  tier2-eval:
-    runs-on: macos-14
+  # All four systems evaluate on one host with import-from-derivation off
+  # (V21): the vendored recipe builds nothing to evaluate (SPEC B4).
+  # x86_64-darwin is evaluated here and never built or pushed.
+  eval:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
@@ -99,11 +99,9 @@ jobs:
       - uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342  # v31.11.0
         with:
           extra_nix_config: |
-            extra-platforms = x86_64-darwin
-            extra-substituters = https://pr0d1r2.cachix.org
-            extra-trusted-public-keys = pr0d1r2.cachix.org-1:NfWjbhgAj41byXhCKiaE+av3Vnphm1fTezHXEGsiQIM=
-      - name: Evaluate x86_64-darwin
-        run: nix eval --raw .#packages.x86_64-darwin.mistral-vibe.drvPath
+            allow-import-from-derivation = false
+      - name: Evaluate every system
+        run: nix flake check --all-systems --no-build
 
   # One nixpkgs node per lock, at the rev nixpkgs-lock publishes (V7, V8,
   # V18). Drift has no other symptom than a silent cache miss.
