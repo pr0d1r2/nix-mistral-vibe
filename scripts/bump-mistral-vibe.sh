@@ -7,7 +7,8 @@
 # Rewrites the tag in flake.nix, re-locks only that input and builds the
 # package and its version check. Prints NEW_VERSION=<version> on stdout when
 # the tag moved, so CI can report it. Nothing else in the repo carries the
-# version, except README.md and SPEC.md prose, which a person updates.
+# version, except README.md and SPEC.md prose, which a person updates. A
+# person also re-syncs nix/vibe.nix against the new tag's flake.nix (V20).
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
