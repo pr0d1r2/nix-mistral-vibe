@@ -76,3 +76,4 @@ T23|.|upstream release w/ #1282 → drop `nix/vibe.nix`, re-export again; #1283 
 id|date|cause|fix
 B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane reads `Cargo.toml` from `rustCliSrc` drv @ eval → linux eval from darwin fails|V11
 B5|2026-10-18|`itok` gate: SPEC.md 2050 tok > ceiling 1990 (T21 text duplicated §C, §T)|§C trimmed, stale-lock bullet dropped
+B6|2026-10-25|`assert-pins`: flake.lock + dev/flake.lock nixpkgs da6dc0e behind nixpkgs-lock 1f607aa|`nix flake update nixpkgs-lock` in root and dev/
