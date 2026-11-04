@@ -115,7 +115,7 @@ let
         prev.mistral-vibe;
   };
 
-  python = pkgs.python312;
+  python = pkgs.python314;
 
   craneLib = crane.mkLib pkgs;
 
