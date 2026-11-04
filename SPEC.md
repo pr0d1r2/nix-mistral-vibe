@@ -32,7 +32,6 @@ self|.|-
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
 - MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 2.26.1`. `x86_64-darwin` evals from aarch64-darwin.
 - upstream IFD (B4): crane reads `Cargo.toml` of `rustCliSrc` (`runCommand` drv) @ eval. vendored: `src` = path (#1282). tag bump ! re-sync `nix/vibe.nix` vs upstream `flake.nix`.
-- `nixConfig` substituter inert for untrusted users (warn `ignoring untrusted substituter`) → README ! say `trusted-users`.
 
 ## §I INTERFACES
 
@@ -77,3 +76,4 @@ B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane reads `Cargo.toml` from `ru
 B5|2026-10-18|`itok` gate: SPEC.md 2050 tok > ceiling 1990 (T21 text duplicated §C, §T)|§C trimmed, stale-lock bullet dropped
 B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update nixpkgs-lock` in root, dev/
 B7|2026-10-25|`itok` gate: SPEC.md 2031 tok > 1990 after B6 row|done T21 dropped (history in git)
+B8|2026-11-04|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
