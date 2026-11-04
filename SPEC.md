@@ -30,7 +30,7 @@ self|.|-
 - ⊥ 2nd nixpkgs: unfollowed upstream nixpkgs → parallel closure → silent cache miss ∀ consumer.
 - upstream tests only against unstable ∴ 26.05 compat = measured, ⊥ assumed.
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
-- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 3.1.0`. `x86_64-darwin` evals from aarch64-darwin.
+- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 2.26.1`. `x86_64-darwin` evals from aarch64-darwin.
 - upstream IFD (B4): crane reads `Cargo.toml` of `rustCliSrc` (`runCommand` drv) @ eval. vendored: `src` = fileset of `vibe/cli-rust` + `vibe/whats_new` (#1282). tag bump ! re-sync `nix/vibe.nix` vs upstream `flake.nix`.
 
 ## §I INTERFACES
