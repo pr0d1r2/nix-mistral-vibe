@@ -15,28 +15,9 @@
         "type": "github"
       }
     },
-    "flake-utils": {
-      "inputs": {
-        "systems": "systems"
-      },
-      "locked": {
-        "lastModified": 1731533236,
-        "narHash": "sha256-l0KFg5HjrsfsO/JpG+r7fRrqm12kzFHyUHqHCVpMMbI=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "11707dc2f618dd54ca8739b309ec4fc024de578b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "type": "github"
-      }
-    },
     "mistral-vibe": {
       "inputs": {
         "crane": "crane",
-        "flake-utils": "flake-utils",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -45,16 +26,16 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1791557715,
-        "narHash": "sha256-+LIobI41N01cZ7eLQWWhJIDdKj8YBRLjFwqqnSQdJ2c=",
+        "lastModified": 1793778906,
+        "narHash": "sha256-lgrxLd7sfXMHK2Q1yvopbUZXtogZWxlMijtXl5cMGXc=",
         "owner": "mistralai",
         "repo": "mistral-vibe",
-        "rev": "4ae5c5955da8e761318916bdb1a7f46f0b50c7d0",
+        "rev": "c96a6dbb34d34f8a868b3f67b279ecabbf1aa616",
         "type": "github"
       },
       "original": {
         "owner": "mistralai",
-        "ref": "v2.26.1",
+        "ref": "v3.1.0",
         "repo": "mistral-vibe",
         "type": "github"
       }
@@ -151,21 +132,6 @@
           "nixpkgs"
         ],
         "nixpkgs-lock": "nixpkgs-lock"
-      }
-    },
-    "systems": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
       }
     },
     "uv2nix": {
