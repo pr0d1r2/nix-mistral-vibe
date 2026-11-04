@@ -77,4 +77,5 @@ B5|2026-10-18|`itok` gate: SPEC.md 2050 tok > ceiling 1990 (T21 text duplicated 
 B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update nixpkgs-lock` in root, dev/
 B7|2026-10-25|`itok` gate: SPEC.md 2031 tok > 1990 after B6 row|done T21 dropped (history in git)
 B8|2026-11-04|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
-B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/` (dir), crate-only `src` lacked it|`nix/vibe.nix` crane `src` = fileset ∋ `vibe/whats_new`; pin → v3.1.0
+B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/` (dir), crate-only `src` lacked it|`nix/vibe.nix` crane `src` = fileset incl. `vibe/whats_new`; pin → v3.1.0
+B10|2026-11-04|`ctrm` gate: U+220B (set-membership sign) in B9 row, not in `spec` set|B9 row: sign → `incl.`
