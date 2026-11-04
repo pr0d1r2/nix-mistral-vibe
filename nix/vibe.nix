@@ -119,13 +119,29 @@ let
 
   craneLib = crane.mkLib pkgs;
 
-  # The one change from upstream (#1282): a plain path as `src`. crane reads
-  # Cargo.toml and walks the tree while evaluating; reading a derivation's
-  # output there is import-from-derivation. The whats_new.md fixup moves to
-  # postPatch (nix/vibe/vibe-rs-post-patch.sh).
+  # lib.fileset wants a path; the flake input is a string. The input is
+  # already in the store, so dropping the string context only changes the
+  # type, and toSource copies from it as it would from any path.
+  srcPath = /. + builtins.unsafeDiscardStringContext "${src}";
+
+  # The one change from upstream (#1282): the source is a fileset, not the
+  # `vibe-rs-src` runCommand derivation. crane reads Cargo.toml and walks the
+  # tree while evaluating; reading a derivation's output there is
+  # import-from-derivation. build.rs embeds the release notes from
+  # ../whats_new, above the crate, so the source keeps both directories and
+  # builds from the crate.
   vibeRs = craneLib.buildPackage {
-    src = "${src}/vibe/cli-rust";
-    postPatch = "bash ${./vibe/vibe-rs-post-patch.sh} ${src}/vibe/whats_new.md";
+    src = lib.fileset.toSource {
+      root = srcPath + "/vibe";
+      fileset = lib.fileset.unions [
+        (srcPath + "/vibe/cli-rust")
+        (srcPath + "/vibe/whats_new")
+      ];
+    };
+    # toSource names the unpacked directory "source".
+    sourceRoot = "source/cli-rust";
+    cargoToml = srcPath + "/vibe/cli-rust/Cargo.toml";
+    cargoLock = srcPath + "/vibe/cli-rust/Cargo.lock";
     cargoVendorDir = craneLib.vendorCargoDeps {
       cargoLock = "${src}/vibe/cli-rust/Cargo.lock";
     };

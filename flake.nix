@@ -21,7 +21,7 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
     mistral-vibe = {
-      url = "github:mistralai/mistral-vibe/v2.26.1";
+      url = "github:mistralai/mistral-vibe/v3.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
