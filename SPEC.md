@@ -25,7 +25,7 @@ self|.|-
 - build = uv2nix (Python, wheels preferred) + crane (Rust `vibe-rs`, vendored from `vibe/cli-rust/Cargo.lock`) + maturin (Harness, `harness/core/Cargo.lock`). ⊥ hash to maintain here: crane & uv2nix derive ∀ from upstream lockfiles.
 - v8 ⊥ compiled: upstream `fetchurl`s prebuilt `librusty_v8` per system (hash pinned upstream ∀ 4 systems).
 - `cryptography 50.0.0` ⊥ wheel for `x86_64-darwin` → source build w/ `fetchCargoVendor` hash upstream says "matches nixpkgs a7e1a760ab81". Risk on our pin; tier-2 only.
-- python = `python312` (upstream hardcodes).
+- python = `python314` (upstream hardcodes).
 - `mistral-vibe.inputs.nixpkgs.follows = "nixpkgs"` → upstream builds on our pin. Upstream's `pyproject-nix`, `uv2nix`, `pyproject-build-systems` follow upstream root nixpkgs ∴ one edge redirects ∀. `crane` ⊥ nixpkgs input.
 - ⊥ 2nd nixpkgs: unfollowed upstream nixpkgs → parallel closure → silent cache miss ∀ consumer.
 - upstream tests only against unstable ∴ 26.05 compat = measured, ⊥ assumed.
