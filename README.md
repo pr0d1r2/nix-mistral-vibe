@@ -12,9 +12,10 @@ flake, built against the nixpkgs the rest of the pr0d1r2 fleet pins
 
 The build is upstream's own recipe (uv2nix for the Python package, crane for
 the Rust TUI, maturin for the Harness), pinned to a release tag and pointed
-at the fleet's nixpkgs. It is vendored in `nix/vibe.nix` with one change, so
-that every system evaluates on any host (see Platform support). Once upstream
-releases that change, this repo goes back to re-exporting upstream's flake.
+at the fleet's nixpkgs. It is vendored in `nix/vibe.nix` for one change, so
+that every system evaluates on any host (see Platform support). Upstream
+released that change in 3.1.0, so this repo goes back to re-exporting
+upstream's flake next.
 
 ## Why this repo exists
 
@@ -74,9 +75,6 @@ nix run github:pr0d1r2/nix-mistral-vibe#vibe-app-server
 | `overlays.default`            | adds `pkgs.mistral-vibe`                    |
 | `checks.<sys>.version`        | `vibe --version` reports the pinned version |
 
-`meta.mainProgram` is added by attribute merge, not `overrideAttrs`, so it
-does not rebuild anything.
-
 ## Binary cache
 
 ```text
@@ -115,14 +113,14 @@ falling back to a local build.
 is pushed for it: GitHub's only Intel macOS runner is being retired. It is
 also the one system where upstream builds `cryptography` from source.
 
-**Every system evaluates on any host.** Upstream builds the Rust TUI's
-source with `runCommand`, and crane reads its `Cargo.toml` while evaluating
-(import from derivation), so evaluating upstream's `packages.x86_64-linux` on
-a Mac needs a Linux builder. The vendored recipe gives crane a plain source
-path instead, the fix filed as
-[mistralai/mistral-vibe#1282](https://github.com/mistralai/mistral-vibe/issues/1282).
-CI evaluates all four systems on one runner with import from derivation
-turned off.
+**Every system evaluates on any host.** Before 3.1.0, upstream built the
+Rust TUI's source with `runCommand`, and crane reads its `Cargo.toml` while
+evaluating (import from derivation), so evaluating upstream's
+`packages.x86_64-linux` on a Mac needed a Linux builder. The vendored recipe
+gives crane a plain source path instead, the fix filed as
+[mistralai/mistral-vibe#1282](https://github.com/mistralai/mistral-vibe/issues/1282)
+and shipped in 3.1.0. CI evaluates all four systems on one runner with
+import from derivation turned off.
 
 ## Closure size
 
@@ -133,8 +131,9 @@ The runtime closure is large, and most of it is not Vibe:
   keeps about 530 MiB of crate sources (v8 alone is 166 MiB) alive at
   runtime. The fix belongs in upstream's build (`--remap-path-prefix`,
   mistralai/mistral-vibe#1283); the vendored recipe leaves it to upstream.
-- On darwin, nixpkgs' Python 3.12 references the Apple SDK and LLVM, about
-  1.3 GiB that every Python application on the pin shares.
+- On darwin, nixpkgs' Python (3.14, upstream's choice) references the Apple
+  SDK and LLVM, about 1.3 GiB (measured on 3.12) that every Python
+  application on the pin shares.
 
 ## Pin graph
 

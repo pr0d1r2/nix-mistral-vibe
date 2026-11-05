@@ -1,11 +1,12 @@
 # Upstream's build recipe, vendored from mistral-vibe's own flake.nix at the
-# pinned tag (V10, owner 2026-10-24). One change: crane gets a plain source
-# path, not the `vibe-rs-src` runCommand derivation, so evaluating any
-# system builds nothing (no IFD, V15). This is the fix filed upstream as
-# mistralai/mistral-vibe#1282; drop this file and re-export again once a
-# release carries it (T23).
+# pinned tag (V20, owner 2026-10-24). It was vendored for one change: crane
+# gets a plain source path, not the `vibe-rs-src` runCommand derivation, so
+# evaluating any system builds nothing (no IFD, V21). That is the fix filed
+# upstream as mistralai/mistral-vibe#1282; v3.1.0 carries it, so this file
+# now differs from upstream only by its hook shell. Drop it and re-export
+# again (T23).
 #
-# Everything else is upstream's, in upstream's order; its hook shell is
+# Everything is upstream's, in upstream's order; its hook shell is
 # in nix/vibe/, one file per step (xenolith). A tag bump re-syncs
 # this file against upstream's flake.nix (scripts/bump-mistral-vibe.sh says
 # so). The inputs are upstream's own locked ones, so the lock graph is the
@@ -20,6 +21,36 @@
 }:
 let
   inherit (pkgs) lib;
+
+  # The systems librusty_v8 is pinned for below.
+  systems = [
+    "x86_64-linux"
+    "aarch64-linux"
+    "x86_64-darwin"
+    "aarch64-darwin"
+  ];
+
+  # lib.fileset wants a path; the flake input is a string. The input is
+  # already in the store, so dropping the string context only changes the
+  # type, and toSource copies from it as it would from any path.
+  srcPath = /. + builtins.unsafeDiscardStringContext "${src}";
+
+  # The tree minus bytecode and tool caches that local Python runs leave
+  # behind (ruff also writes .ruff_cache next to nested ruff.toml files).
+  withoutPythonCaches = lib.fileset.fromSource (
+    lib.sources.cleanSourceWith {
+      src = srcPath;
+      filter =
+        path: _type:
+        !(lib.elem (baseNameOf path) [
+          "__pycache__"
+          ".pytest_cache"
+          ".ruff_cache"
+          ".mypy_cache"
+        ])
+        && !(lib.hasSuffix ".pyc" path);
+    }
+  );
 
   workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = src; };
 
@@ -93,6 +124,31 @@ let
             };
           in
           {
+            # Only what the wheel build reads; vibe-rs comes from crane below,
+            # which has its own source. Local cargo output and Python caches
+            # are left out.
+            src = lib.fileset.toSource {
+              root = srcPath;
+              fileset = lib.fileset.intersection withoutPythonCaches (
+                lib.fileset.difference
+                  (lib.fileset.unions [
+                    (srcPath + "/pyproject.toml")
+                    (srcPath + "/README.md")
+                    (srcPath + "/LICENSE")
+                    (srcPath + "/build_backend")
+                    (srcPath + "/harness")
+                    (srcPath + "/vibe")
+                  ])
+                  (
+                    lib.fileset.unions [
+                      (srcPath + "/vibe/cli-rust")
+                      (lib.fileset.maybeMissing (srcPath + "/vibe/_bin"))
+                      (lib.fileset.maybeMissing (srcPath + "/harness/core/target"))
+                      (lib.fileset.maybeMissing (srcPath + "/harness/core/.cache"))
+                    ]
+                  )
+              );
+            };
             env = (old.env or { }) // {
               VIBE_SKIP_RUST_TUI = "1";
               MATURIN_NO_INSTALL_RUST = "1";
@@ -119,24 +175,19 @@ let
 
   craneLib = crane.mkLib pkgs;
 
-  # lib.fileset wants a path; the flake input is a string. The input is
-  # already in the store, so dropping the string context only changes the
-  # type, and toSource copies from it as it would from any path.
-  srcPath = /. + builtins.unsafeDiscardStringContext "${src}";
-
-  # The one change from upstream (#1282): the source is a fileset, not the
-  # `vibe-rs-src` runCommand derivation. crane reads Cargo.toml and walks the
-  # tree while evaluating; reading a derivation's output there is
-  # import-from-derivation. build.rs embeds the release notes from
-  # ../whats_new, above the crate, so the source keeps both directories and
-  # builds from the crate.
+  # The vendored fix (#1282), upstream's own since v3.1.0: the source is a
+  # fileset, not the `vibe-rs-src` runCommand derivation. crane reads
+  # Cargo.toml and walks the tree while evaluating; reading a derivation's
+  # output there is import-from-derivation. build.rs embeds the release notes
+  # from ../whats_new, above the crate, so the source keeps both directories
+  # and builds from the crate; target/ stays out.
   vibeRs = craneLib.buildPackage {
     src = lib.fileset.toSource {
       root = srcPath + "/vibe";
-      fileset = lib.fileset.unions [
+      fileset = lib.fileset.difference (lib.fileset.unions [
         (srcPath + "/vibe/cli-rust")
         (srcPath + "/vibe/whats_new")
-      ];
+      ]) (lib.fileset.maybeMissing (srcPath + "/vibe/cli-rust/target"));
     };
     # toSource names the unpacked directory "source".
     sourceRoot = "source/cli-rust";
@@ -174,7 +225,15 @@ let
 
   default = mkApplication {
     venv = pythonSet.mkVirtualEnv "mistralai-vibe-env" workspace.deps.default;
-    package = pythonSet.mistral-vibe;
+    package = pythonSet.mistral-vibe.overrideAttrs (old: {
+      meta = (old.meta or { }) // {
+        description = "Minimal CLI coding agent by Mistral";
+        homepage = "https://github.com/mistralai/mistral-vibe";
+        license = lib.licenses.asl20;
+        mainProgram = "vibe";
+        platforms = systems;
+      };
+    });
   };
 in
 {

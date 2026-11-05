@@ -53,21 +53,7 @@
             crane
             ;
         };
-      # Upstream leaves meta.mainProgram unset, so `lib.getExe` warns. meta is
-      # not part of the derivation, so the store path stays the recipe's own.
-      # A plain attribute merge: overrideAttrs (and lib.addMetaAttrs, which
-      # calls it) re-instantiates the derivation and changes its path.
-      vibeFor =
-        system:
-        let
-          pkg = (recipe system).default;
-        in
-        pkg
-        // {
-          meta = pkg.meta // {
-            mainProgram = "vibe";
-          };
-        };
+      vibeFor = system: (recipe system).default;
       app = pkg: bin: {
         type = "app";
         program = "${pkg}/bin/${bin}";
