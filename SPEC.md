@@ -21,16 +21,15 @@ self|.|-
 
 ## §C CONSTRAINTS
 
-- src: `github:mistralai/mistral-vibe` tag `v3.1.0` (released 2026-11-04). Pin by tag ∈ input URL, ⊥ `main` (moves ∀ commit → new store path ∀ commit).
-- build = uv2nix (Python, wheels preferred) + crane (Rust `vibe-rs`, vendored from `vibe/cli-rust/Cargo.lock`) + maturin (Harness, `harness/core/Cargo.lock`). ⊥ hash to maintain here: crane & uv2nix derive ∀ from upstream lockfiles.
-- v8 ⊥ compiled: upstream `fetchurl`s prebuilt `librusty_v8` per system (hash pinned upstream ∀ 4 systems).
-- `cryptography 50.0.0` ⊥ wheel for `x86_64-darwin` → source build w/ `fetchCargoVendor` hash upstream says "matches nixpkgs a7e1a760ab81". Risk on our pin; tier-2 only.
+- src: `github:mistralai/mistral-vibe` tag `v3.1.0`. Pin by tag ∈ input URL, ⊥ `main`.
+- build = uv2nix + crane (Rust `vibe-rs`, vendored from `vibe/cli-rust/Cargo.lock`) + maturin (Harness, `harness/core/Cargo.lock`). ⊥ hash to maintain here: crane & uv2nix derive ∀ from upstream lockfiles.
+- v8 ⊥ compiled: upstream `fetchurl`s prebuilt `librusty_v8` (hash pinned upstream).
+- `cryptography 50.0.0` ⊥ wheel for `x86_64-darwin` → source build w/ `fetchCargoVendor` hash upstream says "matches nixpkgs a7e1a760ab81".
 - python = `python314` (upstream hardcodes).
 - `mistral-vibe.inputs.nixpkgs.follows = "nixpkgs"` → upstream builds on our pin. Upstream's `pyproject-nix`, `uv2nix`, `pyproject-build-systems` follow upstream root nixpkgs ∴ one edge redirects ∀. `crane` ⊥ nixpkgs input.
 - ⊥ 2nd nixpkgs: unfollowed upstream nixpkgs → parallel closure → silent cache miss ∀ consumer.
-- upstream tests only against unstable ∴ 26.05 compat = measured, ⊥ assumed.
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
-- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override; `vibe --version` → `vibe 2.26.1`. `x86_64-darwin` evals from aarch64-darwin.
+- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override. `x86_64-darwin` evals from aarch64-darwin.
 - upstream IFD (B4): crane reads `Cargo.toml` of `rustCliSrc` (`runCommand` drv) @ eval. vendored: `src` = fileset of `vibe/cli-rust` + `vibe/whats_new` (#1282). tag bump ! re-sync `nix/vibe.nix` vs upstream `flake.nix`.
 
 ## §I INTERFACES
@@ -72,10 +71,11 @@ T23|.|upstream release w/ #1282 → drop `nix/vibe.nix`, re-export again; #1283 
 ## §B BUGS
 
 id|date|cause|fix
-B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane reads `Cargo.toml` from `rustCliSrc` drv @ eval → linux eval from darwin fails|V11
-B5|2026-10-18|`itok` gate: SPEC.md 2050 tok > ceiling 1990 (T21 text duplicated §C, §T)|§C trimmed, stale-lock bullet dropped
+B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane IFD @ eval fails linux eval from darwin|V11
+B5|2026-10-18|`itok` gate: SPEC.md over ceiling|§C trimmed
 B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update nixpkgs-lock` in root, dev/
-B7|2026-10-25|`itok` gate: SPEC.md 2031 tok > 1990 after B6 row|done T21 dropped (history in git)
+B7|2026-10-25|`itok` gate: SPEC.md over ceiling|done T21 dropped
 B8|2026-11-04|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
-B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/` (dir), crate-only `src` lacked it|`nix/vibe.nix` crane `src` = fileset incl. `vibe/whats_new`; pin → v3.1.0
-B10|2026-11-04|`ctrm` gate: U+220B (set-membership sign) in B9 row, not in `spec` set|B9 row: sign → `incl.`
+B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/`|crane `src` fileset incl. `vibe/whats_new`; pin v3.1.0
+B10|2026-11-04|`ctrm` gate: non-`spec` char in B9 row|char removed
+B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, B5/B7 wording trimmed
