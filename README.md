@@ -104,7 +104,7 @@ falling back to a local build.
 
 | system           | tier | CI builds | cached | notes                                  |
 | ---------------- | ---- | --------- | ------ | -------------------------------------- |
-| `aarch64-darwin` | 1    | yes       | yes    | native runner `macos-14`               |
+| `aarch64-darwin` | 1    | yes       | yes    | native runner `macos-latest`           |
 | `x86_64-linux`   | 1    | yes       | yes    | native runner `ubuntu-24.04`           |
 | `aarch64-linux`  | 1    | yes       | yes    | native runner `ubuntu-24.04-arm`       |
 | `x86_64-darwin`  | 2    | no        | **no** | declared, built locally by hand        |
