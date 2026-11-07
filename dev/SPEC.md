@@ -15,7 +15,7 @@ self|dev|repo gate: dev flake, guardrail tools, hk steps, CI workflows, cachix p
 - `dev/flake.nix` = separate flake ∴ package consumers ⊥ lock guardrail tools. inputs `nixpkgs-lock` (nixpkgs follows), `nix-hk`, `pklith`, `actlith`, `microlith`, `itok`, `sherd`, `characterminator`, `rekall`, `xenolith`; ∀ follow `nixpkgs-lock`; fleet tools pinned by tag. dev shell = pklith `lib.devShell`; `.envrc` `use flake ./dev`. systems = 3 (pklith ⊥ `x86_64-darwin`).
 - gate = hk via pklith-generated `hk.pklith.pkl` from `.pklith`; `fast` pre-commit, `all` pre-push. `pkl/**` vendored, ⊥ fixer, ⊥ linter.
 - `pkl/Config.pkl` = hk 2.7.0 release schema, copied from pklith main (#57) until pklith release > v0.1.0 ships it.
-- native runners: `ubuntu-24.04`, `ubuntu-24.04-arm`, `macos-14`. ⊥ qemu, ⊥ cross.
+- native runners: `ubuntu-24.04`, `ubuntu-24.04-arm`, `macos-latest` (arm64). ⊥ qemu, ⊥ cross.
 - `cachix-action` pushes ∈ POST step, logs 403 w/o failing job ∴ separate `verify-cache` job.
 - ⊥ workflow pushes branch or opens PR. bumps by hand or loop.
 - CI hand-written, ⊥ actlith v0.1.0: its `build` kind has ⊥ `assert-pins`. 1-host eval works since `.:V21`. actions SHA-pinned as actlith.
