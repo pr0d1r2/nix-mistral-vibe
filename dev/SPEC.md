@@ -52,3 +52,7 @@ id|date|cause|fix
 B1|2026-10-17|pklith v0.1.0 seeds `pkl/Config.pkl` older than hk 2.7.0 → `union property 'command' has no selected default`, ∀ commit refused|V16
 B2|2026-10-17|`pklith lay`: `gen-check` fixer (`pklith gen`) runs ∈ pre-commit, regenerates ∀ steps → `pklith-check` lands early, its own commit empty → lay rolls back ∀|V17
 B3|2026-10-17|`dev/flake.nix` repeated `inputs.<name>.follows` keys → statix W20; shims & `.envrc` failed shfmt (8-space indent) & shellcheck SC2148|V19
+B8|2026-11-04|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
+B12|2026-11-07|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update` in dev/
+B13|2026-11-10|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
+B14|2026-11-11|`itok` gate: SPEC.md over ceiling after B13 row|dev-lock rows B8/B12/B13 moved to dev/SPEC.md §B
