@@ -73,9 +73,6 @@ T23|.|upstream release w/ #1282 → drop `nix/vibe.nix`, re-export again; #1283 
 id|date|cause|fix
 B4|2026-10-17|§V.15 claimed ⊥ IFD; upstream crane IFD @ eval fails linux eval from darwin|V11
 B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update nixpkgs-lock` in root, dev/
-B8|2026-11-04|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
 B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/`|crane `src` fileset incl. `vibe/whats_new`; pin v3.1.0
 B10|2026-11-04|`ctrm` gate: non-`spec` char in B9 row|char removed
 B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, B5/B7 wording trimmed
-B12|2026-11-07|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update` in dev/
-B13|2026-11-10|`assert-pins`: dev/ lock behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
