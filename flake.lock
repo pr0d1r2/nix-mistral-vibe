@@ -26,16 +26,16 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1793778906,
-        "narHash": "sha256-lgrxLd7sfXMHK2Q1yvopbUZXtogZWxlMijtXl5cMGXc=",
+        "lastModified": 1794329670,
+        "narHash": "sha256-yCeenl//gXPqxYvErNRvxKlMOsrmxNzyZZwT5SsIf44=",
         "owner": "mistralai",
         "repo": "mistral-vibe",
-        "rev": "c96a6dbb34d34f8a868b3f67b279ecabbf1aa616",
+        "rev": "b20313e01d6926d4191da89c32d5da11e3a0a060",
         "type": "github"
       },
       "original": {
         "owner": "mistralai",
-        "ref": "v3.1.0",
+        "ref": "v3.1.2",
         "repo": "mistral-vibe",
         "type": "github"
       }

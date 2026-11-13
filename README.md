@@ -6,7 +6,7 @@
 > what it may not, and what to check before trusting anything in this tree.
 <!-- hallucinogen:autonomy-disclaimer end -->
 
-[Mistral Vibe](https://github.com/mistralai/mistral-vibe) 3.1.0 as a Nix
+[Mistral Vibe](https://github.com/mistralai/mistral-vibe) 3.1.2 as a Nix
 flake, built against the nixpkgs the rest of the pr0d1r2 fleet pins
 (`nixos-26.05`), and served prebuilt from cachix.
 
@@ -58,7 +58,7 @@ Then `pkgs.mistral-vibe` via `overlays.default`, or
 `nix-mistral-vibe.packages.${system}.mistral-vibe` directly.
 
 ```sh
-nix run github:pr0d1r2/nix-mistral-vibe -- --version   # vibe 3.1.0
+nix run github:pr0d1r2/nix-mistral-vibe -- --version   # vibe 3.1.2
 nix run github:pr0d1r2/nix-mistral-vibe#rustCli        # the Rust TUI
 nix run github:pr0d1r2/nix-mistral-vibe#vibe-acp       # Agent Client Protocol server
 nix run github:pr0d1r2/nix-mistral-vibe#vibe-app-server

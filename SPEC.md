@@ -2,7 +2,7 @@
 
 ## §G GOAL
 
-Deliver `mistral-vibe` (upstream tag `v3.1.0`) to **nixos 26.05** hosts, built against fleet's pinned nixpkgs, served prebuilt from cachix `pr0d1r2`. recipe vendored w/ IFD fix (`nix/vibe.nix`, owner 2026-10-24; T23).
+Deliver `mistral-vibe` (upstream tag `v3.1.2`) to **nixos 26.05** hosts, built against fleet's pinned nixpkgs, served prebuilt from cachix `pr0d1r2`. recipe vendored w/ IFD fix (`nix/vibe.nix`, owner 2026-10-24; T23).
 
 FIRST BUILT: guardrails (`dev` node), 1 check per commit, hooks live before any package code.
 
@@ -21,7 +21,7 @@ self|.|-
 
 ## §C CONSTRAINTS
 
-- src: `github:mistralai/mistral-vibe` tag `v3.1.0`. Pin by tag ∈ input URL, ⊥ `main`.
+- src: `github:mistralai/mistral-vibe` tag `v3.1.2`. Pin by tag ∈ input URL, ⊥ `main`.
 - build = uv2nix + crane (Rust `vibe-rs`, vendored from `vibe/cli-rust/Cargo.lock`) + maturin (Harness, `harness/core/Cargo.lock`). ⊥ hash to maintain here: crane & uv2nix derive ∀ from upstream lockfiles.
 - v8 ⊥ compiled: upstream `fetchurl`s prebuilt `librusty_v8` (hash pinned upstream).
 - `cryptography 50.0.0` ⊥ wheel for `x86_64-darwin` → source build w/ `fetchCargoVendor` hash upstream says "matches nixpkgs a7e1a760ab81".
@@ -34,7 +34,7 @@ self|.|-
 
 ## §I INTERFACES
 
-- input (this repo): `nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock"`; `nixpkgs.follows = "nixpkgs-lock/nixpkgs"`; `mistral-vibe.url = "github:mistralai/mistral-vibe/v3.1.0"` w/ `inputs.nixpkgs.follows = "nixpkgs"`
+- input (this repo): `nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock"`; `nixpkgs.follows = "nixpkgs-lock/nixpkgs"`; `mistral-vibe.url = "github:mistralai/mistral-vibe/v3.1.2"` w/ `inputs.nixpkgs.follows = "nixpkgs"`
 - flake: `packages.<sys>.mistral-vibe` ≡ `nix/vibe.nix` `default`
 - flake: `packages.<sys>.default` ≡ `packages.<sys>.mistral-vibe`
 - flake: `packages.<sys>.rustCli` ≡ `nix/vibe.nix` `rustCli`
@@ -44,7 +44,7 @@ self|.|-
 - consumer: `nix-mistral-vibe.url = "github:pr0d1r2/nix-mistral-vibe"` w/ `inputs.nixpkgs-lock.follows = "nixpkgs-lock"`
 - cachix: `https://pr0d1r2.cachix.org`, key `pr0d1r2.cachix.org-1:NfWjbhgAj41byXhCKiaE+av3Vnphm1fTezHXEGsiQIM=`
 - cmd: `nix build .#mistral-vibe` → `result/bin/vibe`
-- cmd: `nix run . -- --version` → contains `3.1.0`
+- cmd: `nix run . -- --version` → contains `3.1.2`
 - cmd: `nix flake check --all-systems` → exit 0
 
 ## §V INVARIANTS
