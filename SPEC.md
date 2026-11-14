@@ -76,3 +76,4 @@ B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update 
 B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/`|crane `src` fileset incl. `vibe/whats_new`; pin v3.1.0
 B10|2026-11-04|`ctrm` gate: non-`spec` char in B9 row|char removed
 B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, B5/B7 wording trimmed
+B12|2026-11-14|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock (root already current)|`nix flake update` in dev/
