@@ -4,7 +4,7 @@
 
 Deliver `mistral-vibe` (upstream tag `v3.1.2`) to **nixos 26.05** hosts, built against fleet's pinned nixpkgs, served prebuilt from cachix `pr0d1r2`. recipe vendored w/ IFD fix (`nix/vibe.nix`, owner 2026-10-24; T23).
 
-FIRST BUILT: guardrails (`dev` node), 1 check per commit, hooks live before any package code.
+FIRST BUILT: guardrails (`dev` node), hooks live before any package code.
 
 FEDERATED: rules & tasks moved to a node keep their numbers ∴ freed numbers ⊥ reused here.
 
@@ -78,4 +78,4 @@ B10|2026-11-04|`ctrm` gate: non-`spec` char in B9 row|char removed
 B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, B5/B7 wording trimmed
 B12|2026-11-14|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
 B13|2026-11-18|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
-B14|2026-11-18|`itok` gate: SPEC.md over ceiling after B13 row|B12/B13 & §C wording trimmed
+B14|2026-11-18|`itok` gate: SPEC.md over ceiling after B13 row|B12/B13 trimmed
