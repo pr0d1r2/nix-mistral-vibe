@@ -29,7 +29,7 @@ self|.|-
 - `mistral-vibe.inputs.nixpkgs.follows = "nixpkgs"` → upstream builds on our pin. Upstream's `pyproject-nix`, `uv2nix`, `pyproject-build-systems` follow upstream root nixpkgs ∴ one edge redirects ∀. `crane` ⊥ nixpkgs input.
 - ⊥ 2nd nixpkgs: unfollowed upstream nixpkgs → parallel closure → silent cache miss ∀ consumer.
 - systems: declared **4** (`aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`). tier-1 **3**: `aarch64-darwin`, `x86_64-linux`, `aarch64-linux`, CI builds native & pushes cachix. tier-2 `x86_64-darwin`: eval only, ⊥ CI build, ⊥ cached.
-- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override. `x86_64-darwin` evals from aarch64-darwin.
+- MEASURED 2026-10-17 aarch64-darwin: `.#mistral-vibe` & `.#rustCli` build on 26.05 pin w/ ⊥ override.
 - upstream IFD (B4): crane reads `Cargo.toml` of `rustCliSrc` (`runCommand` drv) @ eval. vendored: `src` = fileset of `vibe/cli-rust` + `vibe/whats_new` (#1282). tag bump ! re-sync `nix/vibe.nix` vs upstream `flake.nix`.
 
 ## §I INTERFACES
@@ -76,5 +76,6 @@ B6|2026-10-25|`assert-pins`: lock nixpkgs behind nixpkgs-lock|`nix flake update 
 B9|2026-11-04|`upstream` workflow red: 3.1.0 build.rs reads `../whats_new/`|crane `src` fileset incl. `vibe/whats_new`; pin v3.1.0
 B10|2026-11-04|`ctrm` gate: non-`spec` char in B9 row|char removed
 B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, B5/B7 wording trimmed
-B12|2026-11-14|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock (root already current)|`nix flake update` in dev/
-B13|2026-11-18|`assert-pins`: dev/flake.lock nixpkgs f1e5c35 behind nixpkgs-lock f684076 (root already current)|`nix flake update` in dev/
+B12|2026-11-14|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
+B13|2026-11-18|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
+B14|2026-11-18|`itok` gate: SPEC.md over ceiling after B13 row|B12/B13 & §C wording trimmed
