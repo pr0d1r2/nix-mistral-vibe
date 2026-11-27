@@ -79,3 +79,4 @@ B11|2026-11-05|`itok` gate: SPEC.md over ceiling after B9/B10 rows|§C bullets, 
 B12|2026-11-14|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
 B13|2026-11-18|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update` in dev/
 B14|2026-11-18|`itok` gate: SPEC.md over ceiling after B13 row|B12/B13 trimmed
+B15|2026-11-27|`assert-pins`: dev/flake.lock nixpkgs behind nixpkgs-lock|`nix flake update nixpkgs-lock` in dev/
